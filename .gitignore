@@ -1,0 +1,83 @@
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite / build outputs
+**/dist/
+**/build/
+**/.vite/
+**/out/
+
+# Logs
+*.log
+logs/
+*.local
+
+# Env files
+.env
+.env.*.local
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+
+# Docker
+**/.docker/
+docker-compose.override.yml
+
+# Coverage
+coverage/
+.nyc_output/
+coverage-final.json
+
+# Runtime artifacts
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Misc
+*.zip
+*.tar.gz
+*.rar
+
+# Ignore local lock files for package managers if you want (optional)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+

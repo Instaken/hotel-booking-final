@@ -1,0 +1,490 @@
+swagger: "2.0"
+info:
+  title: Hotel Booking API
+  version: "1.0.0"
+host: hotel-booking-gateway-8n6yll8a.ew.gateway.dev
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+x-google-endpoints:
+  - name: hotel-booking-gateway-8n6yll8a.ew.gateway.dev
+    allowCors: true
+
+securityDefinitions:
+  firebase:
+    authorizationUrl: ""
+    flow: implicit
+    type: oauth2
+    x-google-issuer: "https://securetoken.google.com/hotel-booking-system-final"
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
+    x-google-audiences: "hotel-booking-system-final"
+
+paths:
+  /api/v1/hotels:
+    options:
+      summary: CORS preflight
+      operationId: corsHotels
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: List hotels
+      operationId: listHotels
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Create hotel
+      operationId: createHotel
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        201:
+          description: Created
+
+  /api/v1/hotels/{id}:
+    options:
+      summary: CORS preflight
+      operationId: corsHotelById
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get hotel
+      operationId: getHotel
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    put:
+      summary: Update hotel
+      operationId: updateHotel
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Delete hotel
+      operationId: deleteHotel
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+
+  /api/v1/rooms:
+    options:
+      summary: CORS preflight
+      operationId: corsRooms
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: List rooms
+      operationId: listRooms
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Create room
+      operationId: createRoom
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        201:
+          description: Created
+
+  /api/v1/rooms/{id}:
+    options:
+      summary: CORS preflight
+      operationId: corsRoomById
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get room
+      operationId: getRoom
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    put:
+      summary: Update room
+      operationId: updateRoom
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Delete room
+      operationId: deleteRoom
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+
+  /api/v1/availability:
+    options:
+      summary: CORS preflight
+      operationId: corsAvailability
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get availability
+      operationId: getAvailability
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Set availability
+      operationId: setAvailability
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+
+  /api/v1/price/predict:
+    options:
+      summary: CORS preflight
+      operationId: corsPricePredict
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Predict price
+      operationId: predictPrice
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://admin-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+
+  /api/v1/search/hotels:
+    options:
+      summary: CORS preflight
+      operationId: corsSearchHotels
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Search hotels
+      operationId: searchHotels
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+
+  /api/v1/search/hotels/{id}:
+    options:
+      summary: CORS preflight
+      operationId: corsSearchHotelById
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get hotel details
+      operationId: getHotelDetails
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+
+  /api/v1/search/destinations:
+    options:
+      summary: CORS preflight
+      operationId: corsSearchDestinations
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get destinations
+      operationId: getDestinations
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+
+  /api/v1/search/map:
+    options:
+      summary: CORS preflight
+      operationId: corsSearchMap
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get map data
+      operationId: getMapData
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+
+  /api/v1/bookings:
+    options:
+      summary: CORS preflight
+      operationId: corsBookings
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: List bookings
+      operationId: listBookings
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Create booking
+      operationId: createBooking
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        201:
+          description: Created
+
+  /api/v1/bookings/{id}:
+    options:
+      summary: CORS preflight
+      operationId: corsBookingById
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get booking
+      operationId: getBooking
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+
+  /api/v1/bookings/{id}/cancel:
+    options:
+      summary: CORS preflight
+      operationId: corsBookingCancel
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Cancel booking
+      operationId: cancelBooking
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+
+  /api/v1/user/profile:
+    options:
+      summary: CORS preflight
+      operationId: corsUserProfile
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    get:
+      summary: Get profile
+      operationId: getProfile
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
+    put:
+      summary: Update profile
+      operationId: updateProfile
+      security:
+        - firebase: []
+      x-google-backend:
+        address: https://client-service-677400217786.europe-west3.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+      responses:
+        200:
+          description: OK
