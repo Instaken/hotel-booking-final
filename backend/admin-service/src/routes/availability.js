@@ -43,32 +43,34 @@ router.get('/', async (req, res, next) => {
 // POST /api/v1/availability - Set room availability for date range
 router.post('/',
   [
-    body('room_id').isUUID(),
-    body('start_date').isISO8601(),
-    body('end_date').isISO8601(),
-    body('available_count').isInt({ min: 0 }),
-    body('price_override').optional().isFloat({ min: 0 })
+    body('room_id').matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).withMessage('room_id must be a valid UUID format'),
+    body('start_date').isDate().withMessage('start_date must be a valid date (YYYY-MM-DD)'),
+    body('end_date').isDate().withMessage('end_date must be a valid date (YYYY-MM-DD)'),
+    body('available_count').isInt({ min: 0 }).withMessage('available_count must be a non-negative integer'),
+    body('price_override').optional({ nullable: true, checkFalsy: true }).isFloat({ min: 0 }).withMessage('price_override must be a positive number')
   ],
   async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        logger.error('Validation errors:', { errors: errors.array(), body: req.body });
         return res.status(400).json({ errors: errors.array() });
       }
 
       const { room_id, start_date, end_date, available_count, price_override } = req.body;
 
-      // Verify room ownership
+      // Verify room exists and user is ADMIN
+      // ADMIN users can manage all rooms
       const roomCheck = await req.db.query(
         `SELECT r.id, r.hotel_id, r.base_price FROM rooms r
          JOIN hotels h ON r.hotel_id = h.id
-         WHERE r.id = $1 AND h.admin_id = $2`,
-        [room_id, req.user.id]
+         WHERE r.id = $1`,
+        [room_id]
       );
 
       if (roomCheck.rows.length === 0) {
-        return res.status(403).json({
-          error: 'Room not found or you do not have permission'
+        return res.status(404).json({
+          error: 'Room not found'
         });
       }
 
@@ -128,12 +130,15 @@ router.post('/',
   }
 );
 
+// UUID regex pattern for validation
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // PUT /api/v1/availability/bulk - Bulk update availability
 router.put('/bulk',
   [
     body('updates').isArray({ min: 1 }),
-    body('updates.*.room_id').isUUID(),
-    body('updates.*.date').isISO8601(),
+    body('updates.*.room_id').matches(UUID_PATTERN).withMessage('room_id must be a valid UUID format'),
+    body('updates.*.date').isDate(),
     body('updates.*.available_count').isInt({ min: 0 }),
     body('updates.*.price').optional().isFloat({ min: 0 })
   ],

@@ -60,10 +60,13 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+// UUID regex pattern for validation
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // POST /api/v1/rooms - Create new room
 router.post('/',
   [
-    body('hotel_id').isUUID(),
+    body('hotel_id').matches(UUID_PATTERN).withMessage('hotel_id must be a valid UUID format'),
     body('name').notEmpty().trim(),
     body('description').optional().trim(),
     body('room_type').isIn(['SINGLE', 'DOUBLE', 'SUITE', 'DELUXE', 'FAMILY']),

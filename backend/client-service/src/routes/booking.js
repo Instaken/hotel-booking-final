@@ -113,12 +113,15 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+// UUID regex pattern for validation
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // POST /api/v1/bookings - Create new booking
 router.post('/',
   [
-    body('room_id').isUUID(),
-    body('check_in').isISO8601(),
-    body('check_out').isISO8601(),
+    body('room_id').matches(UUID_PATTERN).withMessage('room_id must be a valid UUID format'),
+    body('check_in').isDate(),
+    body('check_out').isDate(),
     body('guests').isInt({ min: 1 }),
     body('guest_name').notEmpty().trim(),
     body('guest_email').isEmail(),
@@ -195,25 +198,36 @@ router.post('/',
       // Check if all dates are available
       const availableDates = availabilityResult.rows;
       
-      if (availableDates.length < nights) {
+      // If no availability records exist, use room's base_price and assume available
+      let totalPrice;
+      let useBasePrice = false;
+      
+      if (availableDates.length === 0) {
+        // No availability records - use base price and allow booking
+        useBasePrice = true;
+        totalPrice = parseFloat(room.base_price) * nights;
+        logger.info(`No availability records found, using base price: ${room.base_price} x ${nights} nights`);
+      } else if (availableDates.length < nights) {
+        // Partial availability - not allowed
         await client.query('ROLLBACK');
         return res.status(400).json({ 
-          error: 'Room is not available for all requested dates' 
+          error: 'Room is not available for all requested dates',
+          available_dates: availableDates.length,
+          required_nights: nights
         });
+      } else {
+        // Check availability count for all dates
+        const unavailableDates = availableDates.filter(d => d.available_count < 1);
+        if (unavailableDates.length > 0) {
+          await client.query('ROLLBACK');
+          return res.status(400).json({ 
+            error: 'Room is fully booked for some dates',
+            unavailable_dates: unavailableDates.map(d => d.date)
+          });
+        }
+        // Calculate total price from availability records
+        totalPrice = availableDates.reduce((sum, day) => sum + parseFloat(day.price), 0);
       }
-
-      // Check availability count for all dates
-      const unavailableDates = availableDates.filter(d => d.available_count < 1);
-      if (unavailableDates.length > 0) {
-        await client.query('ROLLBACK');
-        return res.status(400).json({ 
-          error: 'Room is fully booked for some dates',
-          unavailable_dates: unavailableDates.map(d => d.date)
-        });
-      }
-
-      // Calculate total price
-      let totalPrice = availableDates.reduce((sum, day) => sum + parseFloat(day.price), 0);
       
       // Apply 10% discount for logged-in users
       const discountApplied = DISCOUNT_PERCENTAGE;

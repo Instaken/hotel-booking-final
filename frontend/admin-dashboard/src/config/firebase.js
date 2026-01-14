@@ -1,14 +1,14 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
-// Firebase configuration - Replace with your actual config
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAHlqz-knEiIo9wKXrkLZiNbTZAdJiqxXA",
   authDomain: "hotel-booking-system-final.firebaseapp.com",
   projectId: "hotel-booking-system-final",
-  storageBucket: "hotel-booking-system-final.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  storageBucket: "hotel-booking-system-final.firebasestorage.app",
+  messagingSenderId: "677400217786",
+  appId: "1:677400217786:web:c796350cc25405568e9a83"
 };
 
 // Initialize Firebase

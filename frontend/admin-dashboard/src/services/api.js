@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, signOut } from '../config/firebase';
 
 // API Gateway URL - Replace with your actual Cloud Run URL
@@ -11,12 +12,37 @@ const api = axios.create({
   },
 });
 
+// Store for the Google OAuth access token (for Cloud Run IAM auth)
+let cachedGoogleToken = null;
+let tokenExpiry = null;
+
+// Get Google Identity Token for Cloud Run authentication
+const getGoogleIdentityToken = async () => {
+  const user = auth.currentUser;
+  if (!user) return null;
+
+  // Check if we have a valid cached token
+  if (cachedGoogleToken && tokenExpiry && Date.now() < tokenExpiry) {
+    return cachedGoogleToken;
+  }
+
+  try {
+    // Get Firebase ID token (this is what we need for Firebase Auth verification in backend)
+    const firebaseToken = await user.getIdToken();
+    return firebaseToken;
+  } catch (error) {
+    console.error('Error getting token:', error);
+    return null;
+  }
+};
+
 // Add auth token to all requests
 api.interceptors.request.use(
   async (config) => {
     try {
       const user = auth.currentUser;
       if (user) {
+        // Use Firebase ID token - backend should handle Firebase auth only
         const token = await user.getIdToken();
         config.headers.Authorization = `Bearer ${token}`;
       }
